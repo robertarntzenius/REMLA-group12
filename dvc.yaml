@@ -1,0 +1,10 @@
+stages:
+  main:
+    cmd: python3 main.py
+    deps:
+    - main.py
+    - src/analysis.py
+    - src/evaluation.py
+    - src/multilabel.py
+    - src/preprocessing.py
+    - src/transform_text_to_vector.py
