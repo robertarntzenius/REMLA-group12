@@ -1,4 +1,4 @@
-# pylint: disable=W1401,R5503
+# pylint: disable=E0012,W1401,R5503
 """This module preprocesses the data for the model"""
 import re
 from ast import literal_eval
