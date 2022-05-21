@@ -14,4 +14,4 @@ jobs:
     - name: Install isort
       run: pip install isort
     - name: Analysing the code with isort
-      run: isort $(git ls-files '*.py') -c -v --skip src/evaluation.py
+      run: isort $(git ls-files '*.py') -c -v

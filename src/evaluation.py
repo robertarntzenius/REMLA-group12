@@ -1,10 +1,9 @@
 """This module evaluates the model"""
-from sklearn.metrics import (
-    accuracy_score,
-    average_precision_score,
-    f1_score,
-    roc_auc_score,
-)
+# fmt: off
+from sklearn.metrics import (accuracy_score, average_precision_score, f1_score,
+                             roc_auc_score)
+
+# fmt: on
 
 
 def print_evaluation_scores(y_val, predicted):
