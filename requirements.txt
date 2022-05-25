@@ -6,3 +6,6 @@ dvc
 dvc[gdrive]
 pylint
 dslinter
+isort
+black
+
