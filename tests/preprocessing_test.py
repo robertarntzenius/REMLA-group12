@@ -1,4 +1,4 @@
-# pylint: disable=E0401
+# pylint: disable=E0401,R0801
 """This module runs tests for preprocessing.py"""
 import unittest
 
