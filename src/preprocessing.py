@@ -137,27 +137,21 @@ def words_tags_count(x_train, y_train):
 # print(sorted(words_counts, key=words_counts.get, reverse=True)[:3])
 
 
-# def get_most_common_tags(x_train, y_train):
-#     """
-#     x_train: the training data
-#     y_train: the training labels
-#
-#     return the most common tags
-#     """
-#     tags_counts, words_counts = words_tags_count(x_train, y_train)
-#     most_common_tags = sorted(tags_counts.items(), key=lambda x: x[1], reverse=True)[:3]
-#     return most_common_tags
-#
-#
-# def get_most_common_words(x_train, y_train):
-#     """
-#     x_train: the training data
-#     y_train: the training labels
-#
-#     return the most common words
-#     """
-#     tags_counts, words_counts = words_tags_count(x_train, y_train)
-#     most_common_words = sorted(words_counts.items(), key=lambda x: x[1], reverse=True)[
-#                         :3
-#                         ]
-#     return most_common_words
+def get_most_common_tags_or_words(x_train, y_train, get_tags):
+    """
+    x_train: the training data
+    y_train: the training labels
+    get_tags: whether to return the tags_counts
+
+    return the most common tags or commo words
+    """
+    tags_counts, words_counts = words_tags_count(x_train, y_train)
+    if get_tags:
+        most_common_tags = sorted(
+            tags_counts.items(), key=lambda x: x[1], reverse=True
+        )[:3]
+        return most_common_tags
+    most_common_words = sorted(words_counts.items(), key=lambda x: x[1], reverse=True)[
+        :3
+    ]
+    return most_common_words
