@@ -1,6 +1,6 @@
 stages:
   main:
-    cmd: python3 main.py
+    cmd: python main.py
     deps:
     - data/test.tsv
     - data/text_prepare_tests.tsv
