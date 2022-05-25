@@ -1,10 +1,11 @@
-# pylint: disable=E0012,W1401,R5503
+# pylint: disable=E0012,W1401,R5503,R5504
 """This module preprocesses the data for the model"""
 import re
 from ast import literal_eval
 
 import nltk
 import pandas as pd
+import tensorflow_data_validation as tfdv
 from nltk.corpus import stopwords
 
 nltk.download("stopwords")
@@ -16,11 +17,24 @@ def init_preprocessing():
     """
     train = read_data("data/train.tsv")
     validation = read_data("data/validation.tsv")
-    test = pd.read_csv("data/test.tsv", sep="\t")["title"]
+    test = pd.read_csv("data/test.tsv", sep="\t")
 
     x_train, y_train = train["title"].values, train["tags"].values
     x_val, y_val = validation["title"].values, validation["tags"].values
     x_test = test["title"].values
+
+    train_stats = tfdv.generate_statistics_from_dataframe(train)
+    validation_stats = tfdv.generate_statistics_from_dataframe(validation)
+    tfdv.visualize_statistics(
+        rhs_statistics=train_stats,
+        lhs_statistics=validation_stats,
+        rhs_name="TRAIN",
+        lhs_name="VALIDATE",
+    )
+    train_schema = tfdv.infer_schema(train_stats)
+    tfdv.display_schema(train_schema)
+    anomalies = tfdv.validate_statistics(validation_stats, schema=train_schema)
+    tfdv.display_anomalies(anomalies)
 
     # Text prepare
     x_train = [text_prepare(x) for x in x_train]
@@ -35,7 +49,7 @@ def read_data(filename):
 
     return the data from the file
     """
-    data = pd.read_csv(filename, sep="\t")["tags"]
+    data = pd.read_csv(filename, sep="\t")
     data["tags"] = data["tags"].apply(literal_eval)
     return data
 
