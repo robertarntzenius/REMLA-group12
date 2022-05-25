@@ -25,7 +25,7 @@ jobs:
       
     - name: build and push
       run: |
-        IMG=ghcr.io/${{ github.repository }}
+        IMG=ghcr.io/robertarntzenius/remla-group12
         docker build \
           -t ${IMG}:${{ env.version }} \
           -t ${IMG}:${{ env.version_major }}.${{ env.version_minor }}-latest \
