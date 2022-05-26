@@ -1,12 +1,19 @@
-# pylint: disable=E0012,W1401,R5503,R5504
+# pylint: disable=E0012,W0212,W1401,R5503,R5504
 """This module preprocesses the data for the model"""
 import re
+import ssl
 from ast import literal_eval
 
 import nltk
 import pandas as pd
 from nltk.corpus import stopwords
 
+try:
+    _create_unverified_https_context = ssl._create_unverified_context
+except AttributeError:
+    pass
+else:
+    ssl._create_default_https_context = _create_unverified_https_context
 nltk.download("stopwords")
 
 

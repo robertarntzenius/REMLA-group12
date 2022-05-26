@@ -11,10 +11,10 @@ def main():
     """
     # test = pd.read_csv("data/test.tsv", sep="\t")
     train_stats = tfdv.generate_statistics_from_csv(
-        data_location="../data/train.tsv", delimiter="\t"
+        data_location="data/train.tsv", delimiter="\t"
     )
     validation_stats = tfdv.generate_statistics_from_csv(
-        data_location="../data/validation.tsv", delimiter="\t"
+        data_location="data/validation.tsv", delimiter="\t"
     )
     stats = tfdv.get_statistics_html(
         rhs_statistics=train_stats,
@@ -22,13 +22,13 @@ def main():
         rhs_name="TRAIN",
         lhs_name="VALIDATE",
     )
-    with open("../reports/stats.html", "w") as file:
+    with open("reports/stats.html", "w") as file:
         file.write(stats)
     train_schema = tfdv.infer_schema(train_stats)
     tfdv.display_schema(train_schema)
     anomalies = tfdv.validate_statistics(validation_stats, schema=train_schema)
     get_anomalies_markdown(anomalies)
-    tfdv.write_stats_text(train_stats, "../reports/stats.txt")
+    tfdv.write_stats_text(train_stats, "reports/stats.txt")
 
 
 def get_anomalies_markdown(anomalies: anomalies_pb2.Anomalies):
@@ -55,7 +55,7 @@ def get_anomalies_markdown(anomalies: anomalies_pb2.Anomalies):
             ]
         )
 
-    with open("../reports/anomalies.md", "w") as anomd:
+    with open("reports/anomalies.md", "w") as anomd:
         anomd.write("## Anomalies report of the data")
         if len(anomaly_rows) == 0:
             anomd.write("No anomalies found!")

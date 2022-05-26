@@ -12,3 +12,18 @@ stages:
     - src/multilabel.py
     - src/preprocessing.py
     - src/transform_text_to_vector.py
+  validation:
+    cmd: python src/data_validation.py
+    deps:
+    - data/test.tsv
+    - data/text_prepare_tests.tsv
+    - data/train.tsv
+    - data/validation.tsv
+    - src/data_validation.py
+    outs:
+    - reports/anomalies.md:
+        cache: false
+    - reports/stats.html:
+        cache: false
+    - reports/stats.txt:
+        cache: false
