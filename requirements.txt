@@ -6,3 +6,4 @@ pylint
 dslinter
 isort
 black
+tensorflow-data-validation
