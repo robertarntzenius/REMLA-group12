@@ -23,4 +23,4 @@ jobs:
         dvc metrics diff --show-md main > report.md
 
         cat reports/anomalies.md >> report.md
-        cml-send-comment report.md
+        cml send-comment report.md
