@@ -13,7 +13,7 @@ jobs:
         python-version: 3.8
     - name: cml_run
       env:
-        repo_token: &{{ secrets.GITHUB_TOKEN }}
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
       run: |
         pip install -r requirements.txt
         dvc repro
