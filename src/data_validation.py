@@ -56,7 +56,7 @@ def get_anomalies_markdown(anomalies: anomalies_pb2.Anomalies):
         )
 
     with open("reports/anomalies.md", "w") as anomd:
-        anomd.write("## Anomalies report of the data")
+        anomd.write("## Anomalies report of the data\n")
         if len(anomaly_rows) == 0:
             anomd.write("No anomalies found!")
         else:
