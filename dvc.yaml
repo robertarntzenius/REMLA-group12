@@ -12,6 +12,9 @@ stages:
     - src/multilabel.py
     - src/preprocessing.py
     - src/transform_text_to_vector.py
+    metrics:
+    - reports/metrics.json:
+        cache: false
   validation:
     cmd: python src/data_validation.py
     deps:
