@@ -22,7 +22,7 @@ def print_evaluation_scores(y_val, predicted):
     print("Accuracy score: ", accuracy)
     print("F1 score: ", f1score)
     print("Average precision score: ", precision)
-    with open("metrics.json", "w") as file:
+    with open("reports/metrics.json", "w") as file:
         json.dump(
             {"accuracy": accuracy, "F1 score": f1score, "precision": precision}, file
         )
