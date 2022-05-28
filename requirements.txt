@@ -3,7 +3,6 @@ pandas
 scikit-learn
 NLTK
 dvc
-dvc[gdrive]
 pylint
 dslinter
 isort
