@@ -1,0 +1,66 @@
+schema: '2.0'
+stages:
+  main:
+    cmd: python3 main.py
+    deps:
+    - path: data/test.tsv
+      md5: f06925444bd9e4b12b382e0e267345a7
+      size: 1061380
+    - path: data/text_prepare_tests.tsv
+      md5: 0ac15c7eb94aef598a88441b5a310499
+      size: 5191
+    - path: data/train.tsv
+      md5: 2502592a16c44c1e33cb827b2a647406
+      size: 7296139
+    - path: data/validation.tsv
+      md5: 508e1de849c33ba2f38f0b118590a4cd
+      size: 2196271
+    - path: main.py
+      md5: 802f6b29568ee8360f5980b0175e8ad9
+      size: 1594
+    - path: src/analysis.py
+      md5: 595026b19dc32f1294c2f090f3029722
+      size: 1606
+    - path: src/evaluation.py
+      md5: 446085800cb4623312211334adac9e78
+      size: 3095
+    - path: src/multilabel.py
+      md5: 700e5cd4f4772f202bacb55ccd9bca66
+      size: 2888
+    - path: src/preprocessing.py
+      md5: 7fa7c91c1384ef880cc84cb03d8fa186
+      size: 4520
+    - path: src/transform_text_to_vector.py
+      md5: 499d04c5e3bc4bf26bebc746072f69c9
+      size: 3599
+  validation:
+    cmd: python3 src/data_validation.py
+    deps:
+    - path: data/test.tsv
+      md5: f06925444bd9e4b12b382e0e267345a7
+      size: 1061380
+    - path: data/text_prepare_tests.tsv
+      md5: 0ac15c7eb94aef598a88441b5a310499
+      size: 5191
+    - path: data/train.tsv
+      md5: 2502592a16c44c1e33cb827b2a647406
+      size: 7296139
+    - path: data/validation.tsv
+      md5: 508e1de849c33ba2f38f0b118590a4cd
+      size: 2196271
+    - path: src/data_validation.py
+      md5: c84e9cb10bf80cfd982985dbbe8ec0c5
+      size: 2505
+    outs:
+    - path: reports/anomalies.md
+      md5: f0168029c4adeaaa86f5d9b203f8f07e
+      size: 50
+      isexec: true
+    - path: reports/stats.html
+      md5: d6c13de13e68af8a2d89cb853a92c550
+      size: 311582
+      isexec: true
+    - path: reports/stats.txt
+      md5: aa33a605c2fe94b51244168dc3419188
+      size: 341984
+      isexec: true
