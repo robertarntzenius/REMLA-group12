@@ -1,4 +1,4 @@
-# pylint: disable=W1514,R5503,R5504,E0401,W0612,R0914
+# pylint: disable=E0012,W1514,R5503,R5504,E0401,W0612,R0914,R0801
 """This module evaluates the robustness of the model"""
 # fmt: off
 import json
@@ -8,8 +8,9 @@ import nlpaug.augmenter.char as nac
 import pandas as pd
 from sklearn.metrics import accuracy_score, average_precision_score, f1_score
 
-from src import multilabel, preprocessing
-from src import transform_text_to_vector as transform
+import multilabel
+import preprocessing
+import transform_text_to_vector as transform
 
 # fmt: on
 
