@@ -1,5 +1,8 @@
+# pylint: disable=W1514
 """This module evaluates the model"""
 # fmt: off
+import json
+
 from sklearn.metrics import (accuracy_score, average_precision_score, f1_score,
                              roc_auc_score)
 
@@ -13,12 +16,16 @@ def print_evaluation_scores(y_val, predicted):
 
     return nothing, just print the accuracy
     """
-    print("Accuracy score: ", accuracy_score(y_val, predicted))
-    print("F1 score: ", f1_score(y_val, predicted, average="weighted"))
-    print(
-        "Average precision score: ",
-        average_precision_score(y_val, predicted, average="macro"),
-    )
+    accuracy = accuracy_score(y_val, predicted)
+    f1score = f1_score(y_val, predicted, average="weighted")
+    precision = average_precision_score(y_val, predicted, average="macro")
+    print("Accuracy score: ", accuracy)
+    print("F1 score: ", f1score)
+    print("Average precision score: ", precision)
+    with open("reports/metrics.json", "w") as file:
+        json.dump(
+            {"accuracy": accuracy, "F1 score": f1score, "precision": precision}, file
+        )
 
 
 def print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag):
