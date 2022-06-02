@@ -9,10 +9,11 @@ from sklearn.metrics import (accuracy_score, average_precision_score, f1_score,
 # fmt: on
 
 
-def print_evaluation_scores(y_val, predicted):
+def print_evaluation_scores(y_val, predicted, is_bag_of_words):
     """
     y_val: the actual tag
     predicted: the predicted tag
+    is_bag_of_words: whether it will print the scores for the bag of words
 
     return nothing, just print the accuracy
     """
@@ -22,10 +23,18 @@ def print_evaluation_scores(y_val, predicted):
     print("Accuracy score: ", accuracy)
     print("F1 score: ", f1score)
     print("Average precision score: ", precision)
-    with open("reports/metrics.json", "w") as file:
-        json.dump(
-            {"accuracy": accuracy, "F1 score": f1score, "precision": precision}, file
-        )
+    if is_bag_of_words:
+        with open("reports/bag-of-words-metrics.json", "w") as file:
+            json.dump(
+                {"accuracy": accuracy, "F1 score": f1score, "precision": precision},
+                file,
+            )
+    else:
+        with open("reports/tfidf-metrics.json", "w") as file:
+            json.dump(
+                {"accuracy": accuracy, "F1 score": f1score, "precision": precision},
+                file,
+            )
 
 
 def print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag):
@@ -36,7 +45,7 @@ def print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag):
     return nothing, just call a print method
     """
     print("Bag-of-words")
-    print_evaluation_scores(y_val, y_val_predicted_labels_mybag)
+    print_evaluation_scores(y_val, y_val_predicted_labels_mybag, True)
 
 
 def print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf):
@@ -47,7 +56,7 @@ def print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf):
     return nothing, just call a print method
     """
     print("Tfidf")
-    print_evaluation_scores(y_val, y_val_predicted_labels_tfidf)
+    print_evaluation_scores(y_val, y_val_predicted_labels_tfidf, False)
 
 
 def print_roc_auc_score_bag_of_words(y_val, y_val_predicted_scores_mybag):

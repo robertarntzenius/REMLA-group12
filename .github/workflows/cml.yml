@@ -19,8 +19,17 @@ jobs:
         dvc repro
 
         git fetch --prune
-        echo "## Metrics" >> report.md
-        dvc metrics diff --show-md main > report.md
+        echo "# Metrics" > report.md
+        echo "## Bag of words:" >> report.md
+        dvc metrics diff main --targets reports/bag-of-words-metrics.json --show-md >> report.md
+        echo "## Tfidf:" >> report.md
+        dvc metrics diff main --targets reports/tfidf-metrics.json --show-md >> report.md
+
+        echo "# Robustness test" >> report.md
+        echo "## Bag of words:" >> report.md
+        dvc metrics diff main --targets reports/bag-of-words-robustness-metrics.json --show-md >> report.md
+        echo "## Tfidf:" >> report.md
+        dvc metrics diff main --targets reports/tfidf-robustness-metrics.json --show-md >> report.md
 
         cat reports/anomalies.md >> report.md
         cml send-comment --commit-sha=${{ github.event.pull_request.head.sha }} --pr --update report.md
