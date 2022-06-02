@@ -8,3 +8,4 @@ dslinter
 isort
 black
 tensorflow-data-validation
+nlpaug
