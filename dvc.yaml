@@ -13,7 +13,9 @@ stages:
     - src/preprocessing.py
     - src/transform_text_to_vector.py
     metrics:
-    - reports/metrics.json:
+    - reports/bag-of-words-metrics.json:
+        cache: false
+    - reports/tfidf-metrics.json:
         cache: false
   validation:
     cmd: python src/data_validation.py
