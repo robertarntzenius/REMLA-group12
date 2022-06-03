@@ -15,6 +15,8 @@ ENV VIRTUAL_ENV=/root/venv
 RUN python -m venv $VIRTUAL_ENV
 ENV PATH="$VIRTUAL_ENV/bin:$PATH"
 
+COPY main.py .
+COPY flaskapi.py .
 COPY requirements.txt .
 
 RUN python -m pip install --upgrade pip &&\
@@ -24,4 +26,4 @@ COPY src src
 
 EXPOSE 8080
 
-CMD [ "python", "src/flaskapi.py" ]
+CMD [ "python", "flaskapi.py" ]

@@ -7,8 +7,6 @@ from flask import Flask, jsonify, request
 from flasgger import Swagger
 import pandas as pd
 
-import main
-
 # from text_preprocessing import prepare, _extract_message_len, _text_process
 
 app = Flask(__name__)
@@ -74,12 +72,13 @@ def dumb_predict():
 #       200:
 #         description: "The result of the classification: 'spam' or 'ham'."
 #     """
-    # input_data =
+    input_data = request.get_json()
+    sms = input_data.get('sms')
 
     return jsonify({
         "result": "Spam",
         "classifier": "decision tree",
-        "sms": "sms"
+        "sms": sms
     })
 
 if __name__ == '__main__':
