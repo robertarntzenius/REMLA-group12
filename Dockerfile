@@ -1,8 +1,12 @@
 FROM python:3.7.10-slim
 
-RUN apt-get update \
+RUN apt-get clean \
+&& apt-get update \
 && apt-get install -y --no-install-recommends git \
 && apt-get purge -y --auto-remove \
+&& apt-get -y install nginx \
+   python3-dev \
+   build-essential \
 && rm -rf /var/lib/apt/lists/*
 
 WORKDIR /root/
@@ -18,4 +22,6 @@ RUN python -m pip install --upgrade pip &&\
 
 COPY src src
 
-CMD "bash"
+EXPOSE 8080
+
+CMD [ "python", "src/flaskapi.py" ]
