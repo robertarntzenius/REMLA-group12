@@ -10,3 +10,4 @@ black
 tensorflow-data-validation
 nlpaug
 pytest
+pytest-cov
