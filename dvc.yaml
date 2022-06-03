@@ -12,6 +12,11 @@ stages:
     - src/multilabel.py
     - src/preprocessing.py
     - src/transform_text_to_vector.py
+    metrics:
+    - reports/bag-of-words-metrics.json:
+        cache: false
+    - reports/tfidf-metrics.json:
+        cache: false
   validation:
     cmd: python src/data_validation.py
     deps:
@@ -26,4 +31,20 @@ stages:
     - reports/stats.html:
         cache: false
     - reports/stats.txt:
+        cache: false
+  robustness:
+    cmd: python src/robustness_evaluation.py
+    deps:
+    - data/test.tsv
+    - data/text_prepare_tests.tsv
+    - data/train.tsv
+    - data/validation.tsv
+    - src/preprocessing.py
+    - src/multilabel.py
+    - src/transform_text_to_vector.py
+    - src/robustness_evaluation.py
+    metrics:
+    - reports/bag-of-words-robustness-metrics.json:
+        cache: false
+    - reports/tfidf-robustness-metrics.json:
         cache: false

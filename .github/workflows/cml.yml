@@ -1,0 +1,35 @@
+name: Metrics
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v3
+      with:
+        python-version: 3.8
+    - uses: iterative/setup-cml@v1
+    - name: cml_run
+      env:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        pip install -r requirements.txt
+        dvc repro
+
+        git fetch --prune
+        echo "# Metrics" > report.md
+        echo "## Bag of words:" >> report.md
+        dvc metrics diff main --targets reports/bag-of-words-metrics.json --show-md >> report.md
+        echo "## Tfidf:" >> report.md
+        dvc metrics diff main --targets reports/tfidf-metrics.json --show-md >> report.md
+
+        echo "# Robustness test" >> report.md
+        echo "## Bag of words:" >> report.md
+        dvc metrics diff main --targets reports/bag-of-words-robustness-metrics.json --show-md >> report.md
+        echo "## Tfidf:" >> report.md
+        dvc metrics diff main --targets reports/tfidf-robustness-metrics.json --show-md >> report.md
+
+        cat reports/anomalies.md >> report.md
+        cml send-comment --commit-sha=${{ github.event.pull_request.head.sha }} --pr --update report.md
