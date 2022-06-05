@@ -49,7 +49,7 @@ swagger = Swagger(app)
 #     print(res)
 #     return jsonify(res)
 
-@app.route('/dumbpredict', methods=['POST'])
+@app.route('/dumbpredict', methods=['POST', 'GET'])
 def dumb_predict():
 #     """
 #     Predict whether a given SMS is Spam or Ham (dumb model: always predicts 'ham').
@@ -78,7 +78,7 @@ def dumb_predict():
     return jsonify({
         "result": "Spam",
         "classifier": "decision tree",
-        "sms": sms
+        "sms": "sms"
     })
 
 if __name__ == '__main__':
