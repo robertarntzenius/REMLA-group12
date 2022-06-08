@@ -1,3 +1,4 @@
+import argparse
 import requests
 import bs4
 import pandas as pd
@@ -12,7 +13,7 @@ def run_parse(amount, tab='Votes'):
     """
     Run stackoverflow scraper
     :param amount: multiple of 50
-    :param tab: 'Votes', 'Active', 'Newest', 'Bountied', 'Unanswered', 'Frequent', 'Score'
+    :param tab: 'Votes', 'Active', 'Newest', 'Bountied', 'Unanswered', 'Frequent'
     :return: pandas dataframe with questions
     """
     # Count the number of pages
@@ -26,11 +27,25 @@ def run_parse(amount, tab='Votes'):
         # Get the soup
         soup = bs4.BeautifulSoup(page.content, 'html.parser')
         # Get the questions dictionary
-        questions_df = get_test_data(soup)
+        q_df = get_test_data(soup)
         # Concatenate dataframe
-        df = pd.concat([df, questions_df], ignore_index=True)
+        df = pd.concat([df, q_df], ignore_index=True)
+        # Print progress
+        print('Page ' + str(i + 1) + ' of ' + str(pages))
     # Return dataframe
     return df
+
+
+def store_as_tsv(df, filename):
+    """
+    Store dataframe as tsv according to guidelines
+    (https://stackoverflow.blog/2014/01/23/stack-exchange-cc-data-now-hosted-by-the-internet-archive/)
+    :param df: dataframe
+    :param filename: filename
+    :return: None
+    """
+    # Store as tsv in root directory
+    df.to_csv(filename, sep='\t', index=False)
 
 
 def get_test_data(soup):
@@ -44,9 +59,9 @@ def get_test_data(soup):
     # Get the div with the class with prefix 'question-summary'
     question_summary = questions.find_all('div', id=lambda x: x and x.startswith('question-summary'))
     # Get the questions dataframe
-    questions_df = get_questions(question_summary)
+    q_df = get_questions(question_summary)
     # Return the questions dataframe
-    return questions_df
+    return q_df
 
 
 def get_questions(questions):
@@ -56,20 +71,20 @@ def get_questions(questions):
     :return: questions dataframe
     """
     titles = get_titles(questions)
-    hrefs = get_hrefs(questions)
     tags_list = get_tags(questions)
+    hrefs = get_hrefs(questions)
     authors = get_authors(questions)
     author_urls = get_author_urls(questions)
     # Create dataframe
-    questions_df = pd.DataFrame()
+    q_df = pd.DataFrame()
     # Add lists to dataframe
-    questions_df['title'] = titles
-    questions_df['href'] = hrefs
-    questions_df['tags'] = tags_list
-    questions_df['author'] = authors
-    questions_df['author_url'] = author_urls
+    q_df['title'] = titles
+    q_df['tags'] = tags_list
+    q_df['href'] = hrefs
+    q_df['author'] = authors
+    q_df['author_url'] = author_urls
     # Return dataframe
-    return questions_df
+    return q_df
 
 
 def get_titles(questions):
@@ -139,8 +154,15 @@ def get_authors(questions):
         # Find a tags
         a_tags = meta.find('a')
         if a_tags is not None:
-            # Add a text to authors list
-            authors.append(a_tags.text)
+            text = a_tags.text
+            # Remove trailing whitespace
+            text = text.rstrip()
+            print(text)
+            # Check if text starts with a number
+            if text[0].isdigit():
+                authors.append("Anonymous")
+            else:
+                authors.append(text)
         else:
             authors.append('Anonymous')
     return authors
@@ -164,3 +186,20 @@ def get_author_urls(questions):
         else:
             author_urls.append('Anonymous')
     return author_urls
+
+
+if __name__ == '__main__':
+    # Command line arguments
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-a', '--amount', type=int, default=100, help='Amount of questions to scrape (multiple of 50)')
+    parser.add_argument('-t', '--tab', type=str, default='Votes', help='Stackoverflow tab to scrape, choice of: '
+                                                                       'Votes, Active, '
+                                                                       'Newest, Bountied, Unanswered, Frequent')
+    parser.add_argument('-f', '--filename', type=str, default='questions.tsv', help='Filename to store questions')
+    args = parser.parse_args()
+    # Get questions
+    questions_df = run_parse(args.amount, args.tab)
+    # Store as tsv
+    store_as_tsv(questions_df, args.filename)
+    # Print message
+    print('Questions scraped and stored as ' + args.filename)
