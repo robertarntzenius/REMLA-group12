@@ -156,8 +156,7 @@ def get_authors(questions):
         if a_tags is not None:
             text = a_tags.text
             # Remove trailing whitespace
-            text = text.rstrip()
-            print(text)
+            text = text.strip()
             # Check if text starts with a number
             if text[0].isdigit():
                 authors.append("Anonymous")
