@@ -21,7 +21,7 @@ RUN python -m pip install --upgrade pip &&\
     pip install -r requirements.txt
 
 COPY main.py .
-COPY flaskapi.py .
+COPY src/flaskapi.py .
 COPY src src
 COPY data data
 COPY reports reports

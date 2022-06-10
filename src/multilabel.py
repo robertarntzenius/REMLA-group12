@@ -1,4 +1,5 @@
 """This module uses the model to predict the tags"""
+import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import MultiLabelBinarizer
@@ -58,6 +59,7 @@ def train_classifier(x_train, y_train, penalty="l1", cln=1):
     clf = LogisticRegression(penalty=penalty, C=cln, dual=False, solver="liblinear")
     clf = OneVsRestClassifier(clf)
     clf.fit(x_train, y_train)
+    joblib.dump(clf, 'output/model.joblib')
 
     return clf
 
