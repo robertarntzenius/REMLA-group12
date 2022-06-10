@@ -52,8 +52,8 @@ swagger = Swagger(app)
 #     print(res)
 #     return jsonify(res)
 
-@app.route('/dumbpredict', methods=['POST', 'GET'])
-def dumb_predict():
+@app.route('/predict', methods=['POST', 'GET'])
+def predict():
 #     """
 #     Predict whether a given SMS is Spam or Ham (dumb model: always predicts 'ham').
 #     ---
