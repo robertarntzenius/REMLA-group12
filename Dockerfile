@@ -23,6 +23,8 @@ RUN python -m pip install --upgrade pip &&\
 COPY main.py .
 COPY flaskapi.py .
 COPY src src
+COPY data data
+COPY reports reports
 
 EXPOSE 8080
 

@@ -7,6 +7,9 @@ from flask import Flask, jsonify, request
 from flasgger import Swagger
 import pandas as pd
 
+import json
+import main as predictor
+
 # from text_preprocessing import prepare, _extract_message_len, _text_process
 
 app = Flask(__name__)
@@ -72,14 +75,13 @@ def dumb_predict():
 #       200:
 #         description: "The result of the classification: 'spam' or 'ham'."
 #     """
-    input_data = request.get_json()
-    sms = input_data.get('sms')
+    # input_data = request.get_json()
+    # sms = input_data.get('sms')
+    predictor.predict()
+    with open("reports/bag-of-words-metrics.json", "r") as file:
+        prediction = json.load(file)
 
-    return jsonify({
-        "result": "Spam",
-        "classifier": "decision tree",
-        "sms": "sms"
-    })
+    return prediction
 
 if __name__ == '__main__':
     # clf = joblib.load('output/model.joblib')
