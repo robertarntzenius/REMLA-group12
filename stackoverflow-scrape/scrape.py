@@ -1,7 +1,9 @@
 import argparse
 import requests
+import os
 import bs4
 import pandas as pd
+import sklearn.model_selection
 
 URL = 'https://stackoverflow.com/questions'
 
@@ -36,16 +38,30 @@ def run_parse(amount, tab='Votes'):
     return df
 
 
-def store_as_tsv(df, filename):
+def store_as_tsv(df, directory):
     """
     Store dataframe as tsv according to guidelines
     (https://stackoverflow.blog/2014/01/23/stack-exchange-cc-data-now-hosted-by-the-internet-archive/)
     :param df: dataframe
-    :param filename: filename
+    :param directory: directory to store tsvs
     :return: None
     """
+    # If directory does not exist, create it
+    if not os.path.exists(directory):
+        os.makedirs(directory)
     # Store as tsv in root directory
-    df.to_csv(filename, sep='\t', index=False)
+    df.to_csv(directory + '/all_data.tsv', sep='\t', index=False)
+    # Get title and tags columns
+    title_tags = df[['title', 'tags']]
+    # Split title_tags into train (0.8*0.8), test (0.2) and validation (0.8*0.2)
+    train = title_tags[:int(len(title_tags) * 0.8)]
+    test = title_tags[int(len(title_tags) * 0.8):int(len(title_tags) * 0.9)]
+    validation = train[int(len(title_tags) * 0.8):]
+    train = train[:int(len(title_tags) * 0.8)]
+    # Store as tsvs
+    train.to_csv(directory + '/train.tsv', sep='\t', index=False)
+    test[['title']].to_csv(directory + '/test.tsv', sep='\t', index=False)
+    validation.to_csv(directory + '/validation.tsv', sep='\t', index=False)
 
 
 def get_test_data(soup):
@@ -194,11 +210,11 @@ if __name__ == '__main__':
     parser.add_argument('-t', '--tab', type=str, default='Votes', help='Stackoverflow tab to scrape, choice of: '
                                                                        'Votes, Active, '
                                                                        'Newest, Bountied, Unanswered, Frequent')
-    parser.add_argument('-f', '--filename', type=str, default='questions.tsv', help='Filename to store questions')
+    parser.add_argument('-d', '--directory', type=str, default='generated', help='Directory to store question sets')
     args = parser.parse_args()
     # Get questions
     questions_df = run_parse(args.amount, args.tab)
     # Store as tsv
-    store_as_tsv(questions_df, args.filename)
+    store_as_tsv(questions_df, args.directory)
     # Print message
-    print('Questions scraped and stored as ' + args.filename)
+    print('Questions scraped and in ' + args.directory + ' directory.')

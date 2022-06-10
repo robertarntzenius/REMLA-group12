@@ -1,11 +1,17 @@
-"""This module trains a model based on questions on stackoverflow
-and tries to assign a tag to a question"""
+"""
+Automatic evaluation of the generated StackOverflow dataset.
+"""
 from src import evaluation, multilabel, preprocessing
 from src import transform_text_to_vector as transform
 
-def predict():
+
+def run_generated():
+    """
+    Train the model.
+    """
+
     # Preprocessing
-    X_train, y_train, X_val, y_val, X_test = preprocessing.init_preprocessing('data')
+    X_train, y_train, X_val, y_val, X_test = preprocessing.init_preprocessing('generated')
     tags_counts, words_counts = preprocessing.words_tags_count(X_train, y_train)
 
     # Transform text to vector
@@ -46,8 +52,6 @@ def predict():
     evaluation.print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf)
     evaluation.print_roc_auc_score_tfidf(y_val, y_val_predicted_scores_tfidf)
 
-    # Analysis
-
 
 if __name__ == '__main__':
-    predict()
+    run_generated()
