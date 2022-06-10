@@ -16,4 +16,7 @@ jobs:
             pip install pandas bs4 requests
         - name: Generate test data
           run: |
-            python stackoverflow-scrape/scrape.py --amount 5000 --tab Votes --filename data/test-data-votes.csv
+            python stackoverflow-scrape/scrape.py --amount 5000 --tab Votes --directory generated
+        - name: Test and evaluate data
+          run: |
+            python src/stackoverflow-evaluation.py
