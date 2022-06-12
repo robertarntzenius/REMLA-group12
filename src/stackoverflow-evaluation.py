@@ -1,8 +1,8 @@
 """
 Automatic evaluation of the generated StackOverflow dataset.
 """
-from src import evaluation, multilabel, preprocessing
-from src import transform_text_to_vector as transform
+import src.evaluation as evaluation, src.multilabel as multilabel, src.preprocessing as preprocessing
+import src.transform_text_to_vector as transform
 
 
 def run_generated():
