@@ -21,11 +21,12 @@ RUN python -m pip install --upgrade pip &&\
     pip install -r requirements.txt
 
 COPY main.py .
-COPY src/flaskapi.py .
 COPY src src
 COPY data data
 COPY reports reports
+COPY output output
 
 EXPOSE 8080
 
-CMD [ "python", "flaskapi.py" ]
+RUN python main.py
+CMD [ "python", "src/flaskapi.py" ]

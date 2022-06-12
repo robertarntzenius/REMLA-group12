@@ -1,13 +1,11 @@
 import joblib
-import numpy as np
 from flask import Flask, request, render_template, redirect
 from flasgger import Swagger
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
-import pandas as pd
 
-from src.preprocessing import text_prepare
+from preprocessing import text_prepare
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
@@ -29,22 +27,19 @@ def index():
 # Page where the predicted tags are shown
 @app.route('/predict', methods=['POST'])
 def predict():
-    prediction = []
-    if request.method == 'POST':
-        question = str(request.form.get('question'))
-        processed_question = text_prepare(question)
-        model = joblib.load('../output/model.joblib')
-        prediction = model.predict(np.array([processed_question]).reshape(1, -1))
+    tags = joblib.load('output/tags.joblib')
+    tfidf_vectorizer = joblib.load('output/tfidf_vectorizer.joblib')
+    classifier_tfidf = joblib.load('output/classifier_tfidf.joblib')
 
-    print(prediction)
+    question = str(request.form.get('question'))
+    processed_question = tfidf_vectorizer.transform([text_prepare(question)])
 
-    return render_template('predict.html', tags=prediction)
+    prediction = classifier_tfidf.predict(processed_question)
+    result = [i for (i, v) in zip(tags, prediction[0]) if v == 1]
+    if not result:
+        result = ["No tags"]
 
-# Testing page where the tags "java" and "c++" are always shown as predicted tags
-@app.route('/dumbpredict')
-def dumb_predict():
-    return render_template('predict.html', tags=["java", "c++"])
+    return render_template('predict.html', question=question, tags=result)
 
 if __name__ == '__main__':
-    # clf = joblib.load('output/model.joblib')
     app.run(host="0.0.0.0", port=8080, debug=True)

@@ -1,5 +1,7 @@
 """This module trains a model based on questions on stackoverflow
 and tries to assign a tag to a question"""
+import joblib
+
 from src import evaluation, multilabel, preprocessing
 from src import transform_text_to_vector as transform
 
@@ -7,6 +9,8 @@ def predict():
     # Preprocessing
     X_train, y_train, X_val, y_val, X_test = preprocessing.init_preprocessing()
     tags_counts, words_counts = preprocessing.words_tags_count(X_train, y_train)
+
+    joblib.dump(sorted(tags_counts.keys()), 'output/tags.joblib')
 
     # Transform text to vector
     ## Bag of words
