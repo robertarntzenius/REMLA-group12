@@ -47,10 +47,10 @@ def run_generated():
     # Evaluate model
     ## Bag of words
     evaluation.print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag)
-    evaluation.print_roc_auc_score_bag_of_words(y_val, y_val_predicted_scores_mybag)
+    # evaluation.print_roc_auc_score_bag_of_words(y_val, y_val_predicted_scores_mybag)
     ## TF-IDF
-    evaluation.print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf)
-    evaluation.print_roc_auc_score_tfidf(y_val, y_val_predicted_scores_tfidf)
+    #evaluation.print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf)
+    #evaluation.print_roc_auc_score_tfidf(y_val, y_val_predicted_scores_tfidf)
 
 
 if __name__ == '__main__':
