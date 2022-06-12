@@ -1,4 +1,5 @@
 """This module uses the model to predict the tags"""
+import joblib
 from sklearn.linear_model import LogisticRegression
 from sklearn.multiclass import OneVsRestClassifier
 from sklearn.preprocessing import MultiLabelBinarizer
@@ -41,6 +42,8 @@ def multilabel_tfidf(x_train_tfidf, y_train, x_val_tfidf):
     return the predicted labels and scores for tfidf
     """
     classifier_tfidf = train_classifier(x_train_tfidf, y_train)
+    joblib.dump(classifier_tfidf, 'output/classifier_tfidf.joblib')
+
     y_val_predicted_labels_tfidf = classifier_tfidf.predict(x_val_tfidf)
     y_val_predicted_scores_tfidf = classifier_tfidf.decision_function(x_val_tfidf)
     return y_val_predicted_labels_tfidf, y_val_predicted_scores_tfidf
