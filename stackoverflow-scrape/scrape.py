@@ -56,7 +56,7 @@ def store_as_tsv(df, directory):
     # Split title_tags into train (0.8*0.8), test (0.2) and validation (0.8*0.2)
     train = title_tags[:int(len(title_tags) * 0.8)]
     test = title_tags[int(len(title_tags) * 0.8):int(len(title_tags) * 0.9)]
-    validation = train[int(len(title_tags) * 0.8):]
+    validation = train[int(len(train) * 0.8):]
     train = train[:int(len(title_tags) * 0.8)]
     # Store as tsvs
     train.to_csv(directory + '/train.tsv', sep='\t', index=False)

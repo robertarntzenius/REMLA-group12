@@ -23,7 +23,7 @@ def init_preprocessing(directory):
     """
     train = read_data(directory + "/train.tsv")
     validation = read_data(directory + "/validation.tsv")
-    test = pd.read_csv(directory + "test.tsv", sep="\t")
+    test = pd.read_csv(directory + "/test.tsv", sep="\t")
 
     x_train, y_train = train["title"].values, train["tags"].values
     x_val, y_val = validation["title"].values, validation["tags"].values

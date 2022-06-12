@@ -3,20 +3,31 @@ name: Test data generation
 on: push
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-        - uses: actions/checkout@v3
-        - uses: actions/setup-python@v3
-          with:
-            python-version: 3.8
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install pandas bs4 requests sklearn
-        - name: Generate test data
-          run: |
-            python stackoverflow-scrape/scrape.py --amount 5000 --tab Votes --directory generated
-        - name: Test and evaluate data
-          run: |
-            python src/stackoverflow-evaluation.py
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pandas bs4 requests sklearn
+      - name: Generate test data
+        run: |
+          python stackoverflow-scrape/scrape.py --amount 5000 --tab Votes --directory generated
+      - name: Test and evaluate data
+        run: |
+          python src/stackoverflow-evaluation.py
+          dvc repro
+          
+          git fetch --prune
+          echo "# Metrics" > report.md
+          echo "## Bag of words:" >> report.md
+          dvc metrics diff main --targets reports/bag-of-words-metrics.json --show-md >> report.md
+          echo "## Tfidf:" >> report.md
+          dvc metrics diff main --targets reports/tfidf-metrics.json --show-md >> report.md
+          
+          # comment on the commit
+            cml send-comment report.md
