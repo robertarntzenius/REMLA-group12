@@ -19,6 +19,7 @@ jobs:
           python stackoverflow-scrape/scrape.py --amount 5000 --tab Votes --directory generated
       - name: Test and evaluate data
         run: |
+          ls
           python src/stackoverflow-evaluation.py
           dvc repro
           
