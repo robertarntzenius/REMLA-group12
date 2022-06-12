@@ -30,5 +30,4 @@ jobs:
           echo "## Tfidf:" >> report.md
           dvc metrics diff main --targets reports/tfidf-metrics.json --show-md >> report.md
           
-          # comment on the commit
-            cml send-comment report.md
+          cml send-comment report.md
