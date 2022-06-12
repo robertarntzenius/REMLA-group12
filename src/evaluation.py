@@ -18,6 +18,7 @@ def print_evaluation_scores(y_val, predicted, is_bag_of_words):
     return nothing, just print the accuracy
     """
     accuracy = accuracy_score(y_val, predicted)
+    print(y_val, predicted)
     f1score = f1_score(y_val, predicted, average="weighted")
     precision = average_precision_score(y_val, predicted, average="macro")
     print("Accuracy score: ", accuracy)
