@@ -28,6 +28,6 @@ jobs:
           git fetch --prune
           echo "# Metrics" > report.md
           echo "## Bag of words:" >> report.md
-          sudo reports/bag-of-words-metrics.json --show-md >> report.md
+          sudo reports/bag-of-words-metrics.json >> report.md
           
           cml send-comment report.md
