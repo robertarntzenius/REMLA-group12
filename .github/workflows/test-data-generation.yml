@@ -17,13 +17,12 @@ jobs:
           pip install -r requirements.txt
       - name: Generate test data
         run: |
-          python stackoverflow-scrape/scrape.py --amount 5000 --tab Votes --directory generated
+          python stackoverflow-scrape/scrape.py --amount 50000 --tab Votes --directory generated
       - name: Test and evaluate data
         env:
           repo_token: ${{ secrets.GITHUB_TOKEN }}
         run: |
           python src/stackoverflow-evaluation.py
-          dvc repro
           
           git fetch --prune
           echo "# Metrics" > report.md
