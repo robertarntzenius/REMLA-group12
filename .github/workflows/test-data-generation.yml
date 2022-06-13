@@ -20,7 +20,6 @@ jobs:
           python stackoverflow-scrape/scrape.py --amount 5000 --tab Votes --directory generated
       - name: Test and evaluate data
         run: |
-          ls
           python src/stackoverflow-evaluation.py
           dvc repro
           
@@ -28,7 +27,5 @@ jobs:
           echo "# Metrics" > report.md
           echo "## Bag of words:" >> report.md
           reports/bag-of-words-metrics.json --show-md >> report.md
-#          echo "## Tfidf:" >> report.md
-#          dvc metrics diff main --targets reports/tfidf-metrics.json --show-md >> report.md
           
           cml send-comment report.md
