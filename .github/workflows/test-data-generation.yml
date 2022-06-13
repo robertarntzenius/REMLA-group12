@@ -27,8 +27,8 @@ jobs:
           git fetch --prune
           echo "# Metrics" > report.md
           echo "## Bag of words:" >> report.md
-          dvc metrics diff main --targets reports/bag-of-words-metrics.json --show-md >> report.md
-          echo "## Tfidf:" >> report.md
-          dvc metrics diff main --targets reports/tfidf-metrics.json --show-md >> report.md
+          reports/bag-of-words-metrics.json --show-md >> report.md
+#          echo "## Tfidf:" >> report.md
+#          dvc metrics diff main --targets reports/tfidf-metrics.json --show-md >> report.md
           
           cml send-comment report.md
