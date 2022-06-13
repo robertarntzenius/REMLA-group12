@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: web
-        image: test:latest
+        image: robertarntzenius/test:latest
         ports:
         - containerPort: 8080
         env:
@@ -45,7 +45,7 @@ kind: ServiceMonitor
 metadata:
   name: my-monitor
   labels:
-    release: pomstack
+    release: promstack
 spec:
   selector:
     matchLabels:
