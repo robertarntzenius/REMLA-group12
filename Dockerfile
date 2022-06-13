@@ -24,7 +24,7 @@ COPY main.py .
 COPY src src
 COPY data data
 COPY reports reports
-COPY output output
+RUN mkdir -p output
 
 EXPOSE 8080
 
