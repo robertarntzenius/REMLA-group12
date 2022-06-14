@@ -19,3 +19,5 @@ jobs:
       run: pylint --load-plugins=dslinter $(git ls-files '*.py')
     - name: Run isort
       run: isort $(git ls-files '*.py') -c -v
+    - name: Run black
+      run: black --check --diff $(git ls-files '*.py')
