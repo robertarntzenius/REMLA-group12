@@ -26,4 +26,5 @@ jobs:
           
           git fetch --prune
           
-          cml send-comment reports/bag-of-words-metrics-stackoverflow.json
+          cml send-comment reports/bag-of-words-metrics-stackoverflow.md
+          cml send-comment reports/tf-idf-metrics-stackoverflow.md
