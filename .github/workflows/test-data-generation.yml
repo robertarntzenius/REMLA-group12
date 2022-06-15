@@ -25,9 +25,5 @@ jobs:
           python src/stackoverflow-evaluation.py
           
           git fetch --prune
-          echo "# Metrics" > report.md
-          echo "## Bag of words:" >> report.md
-          echo fromJson(reports/bag-of-words-metrics.json)
-          echo fromJson(reports/bag-of-words-metrics.json) >> report.md
           
-          cml send-comment report.md
+          cml send-comment reports/bag-of-words-metrics-stackoverflow.json
