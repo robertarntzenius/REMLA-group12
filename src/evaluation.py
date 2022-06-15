@@ -2,6 +2,7 @@
 """This module evaluates the model"""
 # fmt: off
 import json
+from mdutils.mdutils import MdUtils
 
 from sklearn.metrics import (accuracy_score, average_precision_score, f1_score,
                              roc_auc_score)
@@ -36,17 +37,16 @@ def print_evaluation_scores(y_val, predicted, is_bag_of_words, is_stackoverflow=
                 file,
             )
     if is_bag_of_words and is_stackoverflow:
-        with open("reports/bag-of-words-metrics-stackoverflow.json", "w") as file:
-            json.dump(
-                {"accuracy": accuracy, "F1 score": f1score, "precision": precision},
-                file,
-            )
+        md_file = MdUtils(file_name='reports/bag-of-words-metrics-stackoverflow', title='Stackoverflow bag of words metrics')
+        table = ['Metric', 'Value', 'Accuracy', str(accuracy), 'F1 score', str(f1score), 'Precision', str(precision)]
+        md_file.new_table(2, 4, table)
+        md_file.create_md_file()
+
     if not is_bag_of_words and is_stackoverflow:
-        with open("reports/tfidf-metrics-stackoverflow.json", "w") as file:
-            json.dump(
-                {"accuracy": accuracy, "F1 score": f1score, "precision": precision},
-                file,
-            )
+        md_file = MdUtils(file_name='reports/tf-idf-metrics-stackoverflow', title='Stackoverflow tfidf metrics')
+        table = ['Metric', 'Value', 'Accuracy', str(accuracy), 'F1 score', str(f1score), 'Precision', str(precision)]
+        md_file.new_table(2, 4, table)
+        md_file.create_md_file()
 
 
 def print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag, is_stackoverflow=False):
