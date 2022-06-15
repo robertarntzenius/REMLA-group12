@@ -16,4 +16,5 @@ flasgger
 nlpaug
 
 beautifulsoup4
+mdutils
 
