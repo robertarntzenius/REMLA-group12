@@ -3,9 +3,12 @@ import requests
 import os
 import bs4
 import pandas as pd
-import sklearn.model_selection
+from collections import Counter
 
 URL = 'https://stackoverflow.com/questions'
+tags = ['python', 'java', 'php']
+tags_count = []
+
 
 # Follow stackoverflow guidelines
 # (https://stackoverflow.blog/2014/01/23/stack-exchange-cc-data-now-hosted-by-the-internet-archive/)
@@ -22,10 +25,11 @@ def run_parse(amount, tab='Votes'):
     pages = amount // 50
     # Create empty dataframe
     df = pd.DataFrame()
+    tags_url_section = make_tags_url_section()
     # Loop through pages
     for i in range(pages):
         # Get the page
-        page = requests.get(URL + '?tab=' + tab + '&pagesize=50&page=' + str(i + 1))
+        page = requests.get(URL + tags_url_section + '?tab=' + tab + '&pagesize=50&page=' + str(i + 1))
         # Get the soup
         soup = bs4.BeautifulSoup(page.content, 'html.parser')
         # Get the questions dictionary
@@ -91,6 +95,7 @@ def get_questions(questions):
     hrefs = get_hrefs(questions)
     authors = get_authors(questions)
     author_urls = get_author_urls(questions)
+    count_tags(questions)
     # Create dataframe
     q_df = pd.DataFrame()
     # Add lists to dataframe
@@ -149,11 +154,13 @@ def get_tags(questions):
         meta = question.find('div', class_='s-post-summary--meta-tags')
         # Find a tags
         a_tags = meta.find_all('a')
-        tags = []
+        t = []
         # Add a text to tags list
         for a in a_tags:
-            tags.append(a.text)
-        tags_list.append(tags)
+            # If tag is in tags list, add it
+            if a.text in tags:
+                t.append(a.text)
+        tags_list.append(t)
     return tags_list
 
 
@@ -203,6 +210,44 @@ def get_author_urls(questions):
     return author_urls
 
 
+def count_tags(questions):
+    """
+    Count tags in questions html object
+    :param questions: html object
+    :return: list of tags
+    """
+    # tags_count list with tuples (tag, count)
+    for question in questions:
+        # Find div with name s-post-summary--meta
+        meta = question.find('div', class_='s-post-summary--meta-tags')
+        # Find a tags
+        a_tags = meta.find_all('a')
+        # Loop over a_tags, if tag is not in tags_count tuple, add it
+        for a in a_tags:
+            tags_count.append(a.text)
+    return tags_count
+
+
+def get_tags_count():
+    count = Counter(tags_count)
+    return count
+
+
+def make_tags_url_section():
+    """
+    Make tags url section from tags list
+    :param t: list of tags
+    :return: tags url section
+    """
+    tags_url_section = '/tagged/'
+    # Loop over tags except last one
+    for tag in tags[:-1]:
+        tags_url_section += tag + ' or '
+    # Add last tag
+    tags_url_section += tags[-1]
+    return tags_url_section
+
+
 if __name__ == '__main__':
     # Command line arguments
     parser = argparse.ArgumentParser()
@@ -216,5 +261,6 @@ if __name__ == '__main__':
     questions_df = run_parse(args.amount, args.tab)
     # Store as tsv
     store_as_tsv(questions_df, args.directory)
+    print(get_tags_count())
     # Print message
     print('Questions scraped and in ' + args.directory + ' directory.')

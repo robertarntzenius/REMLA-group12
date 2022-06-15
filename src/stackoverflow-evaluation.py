@@ -12,6 +12,10 @@ def run_generated():
 
     # Preprocessing
     X_train, y_train, X_val, y_val, X_test = preprocessing.init_preprocessing('generated')
+    # Print length of training, validation and test set
+    print('Length of training set:', len(X_train))
+    print('Length of validation set:', len(X_val))
+    print('Length of test set:', len(X_test))
     tags_counts, words_counts = preprocessing.words_tags_count(X_train, y_train)
 
     # Transform text to vector
@@ -46,11 +50,11 @@ def run_generated():
 
     # Evaluate model
     ## Bag of words
-    evaluation.print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag)
-    # evaluation.print_roc_auc_score_bag_of_words(y_val, y_val_predicted_scores_mybag)
+    evaluation.print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag, is_stackoverflow=True)
+    evaluation.print_roc_auc_score_bag_of_words(y_val, y_val_predicted_scores_mybag)
     ## TF-IDF
-    #evaluation.print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf)
-    #evaluation.print_roc_auc_score_tfidf(y_val, y_val_predicted_scores_tfidf)
+    evaluation.print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf, is_stackoverflow=True)
+    evaluation.print_roc_auc_score_tfidf(y_val, y_val_predicted_scores_tfidf)
 
 
 if __name__ == '__main__':

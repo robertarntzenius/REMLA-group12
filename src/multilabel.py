@@ -55,7 +55,7 @@ def train_classifier(x_train, y_train, penalty="l1", cln=1):
 
     # Create and fit LogisticRegression wraped into OneVsRestClassifier.
 
-    clf = LogisticRegression(penalty=penalty, C=cln, dual=False, solver="liblinear")
+    clf = LogisticRegression(penalty=penalty, C=cln, dual=False, solver="liblinear", max_iter=100)
     clf = OneVsRestClassifier(clf)
     clf.fit(x_train, y_train)
 
