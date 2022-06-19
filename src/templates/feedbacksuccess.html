@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>StackOverflow Tags Predictor - Index</title>
+    <title>StackOverflow Tags Predictor - Prediction</title>
     <style>
         body {
            font-family: sans-serif;
@@ -44,17 +44,9 @@
     </style>
 </head>
 <body>
-<h1>StackOverflow Tags Predictor</h1>
-<div>
-    <h2>Predict the tags for your question!</h2>
-    <form action="/predict" method="post">
-        {{ form.hidden_tag() }}
-        <p>
-            {{ form.question.label }}<br>
-            {{ form.question() }}
-        </p>
-        <p>{{ form.submit() }}</p>
-    </form>
-</div>
+    <h1>StackOverflow Tags Predictor</h1>
+    <h2>Thank you for your feedback!</h2>
+
+    <button type="button" onclick="window.location.href='../'">Try another question!</button>
 </body>
 </html>

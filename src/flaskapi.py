@@ -1,8 +1,10 @@
+import json
+
 import joblib
 from flask import Flask, request, render_template, redirect
 from flasgger import Swagger
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import StringField, SubmitField, BooleanField
 from wtforms.validators import DataRequired
 
 from preprocessing import text_prepare
@@ -14,6 +16,14 @@ swagger = Swagger(app)
 class QuestionForm(FlaskForm):
     question = StringField('Question', validators=[DataRequired()])
     submit = SubmitField('Predict')
+
+class TagsAccurateForm(FlaskForm):
+    tags_accurate = BooleanField()
+    submit = SubmitField('Yes')
+
+class TagsNotAccurateForm(FlaskForm):
+    tags_accurate = BooleanField()
+    submit = SubmitField('No')
 
 # Homepage with only a string field for the StackOverflow question you want to predict the tags for
 @app.route('/')
@@ -37,9 +47,27 @@ def predict():
     prediction = classifier_tfidf.predict(processed_question)
     result = [i for (i, v) in zip(tags, prediction[0]) if v == 1]
     if not result:
-        result = ["No tags"]
+        result = []
 
     return render_template('predict.html', question=question, tags=result)
+
+@app.route('/feedbacksucces', methods=['POST'])
+def feedbacksucces():
+    tags_accurate = request.form.get('tags_accurate')
+    if not tags_accurate:
+        suggested_tags = request.form.get('suggested_tags')
+
+        #TODO Process tags
+        print(suggested_tags)
+
+    return render_template('feedbacksuccess.html')
+
+@app.route('/feedback', methods=['POST'])
+def feedback():
+    question = str(request.form.get('question'))
+    tags = json.loads(request.form.get('tags'))
+    print(tags)
+    return render_template('feedback.html', question=question, tags=tags)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=8080, debug=True)
