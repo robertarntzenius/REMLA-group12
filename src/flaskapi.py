@@ -53,11 +53,12 @@ def predict():
 
 @app.route('/feedbacksucces', methods=['POST'])
 def feedbacksucces():
+    question = str(request.form.get('question'))
     tags_accurate = request.form.get('tags_accurate')
     if not tags_accurate:
         suggested_tags = request.form.get('suggested_tags')
 
-        #TODO Process tags
+        #TODO Process feedback
         print(suggested_tags)
 
     return render_template('feedbacksuccess.html')
