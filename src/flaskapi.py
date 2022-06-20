@@ -9,9 +9,13 @@ from wtforms.validators import DataRequired
 
 from preprocessing import text_prepare
 
+from metrics import MetricHandler
+
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'you-will-never-guess'
 swagger = Swagger(app)
+
+metric_handler = MetricHandler()
 
 class QuestionForm(FlaskForm):
     question = StringField('Question', validators=[DataRequired()])
@@ -48,6 +52,8 @@ def predict():
     result = [i for (i, v) in zip(tags, prediction[0]) if v == 1]
     if not result:
         result = []
+        
+    metric_handler.new_prediction(result)
 
     return render_template('predict.html', question=question, tags=result)
 
@@ -55,9 +61,11 @@ def predict():
 def feedbacksucces():
     question = str(request.form.get('question'))
     tags_accurate = request.form.get('tags_accurate')
+    
+    metric_handler.feedback(tags_accurate)
+    
     if not tags_accurate:
         suggested_tags = request.form.get('suggested_tags')
-
         #TODO Process feedback
         print(suggested_tags)
 
@@ -70,5 +78,22 @@ def feedback():
     print(tags)
     return render_template('feedback.html', question=question, tags=tags)
 
+@app.route('/metrics')
+def metrics():
+	metrics = ""
+	
+	metrics += "# HELP number_of_predictions Total number of predictions cast\n"
+	metrics += "# TYPE number_of_predictions counter\n"
+	metrics += "number_of_predictions " + str(metric_handler.get_no_predictions()) + "\n\n"
+	metrics += "# HELP correct_predictions Total number of correct predictions\n"
+	metrics += "# TYPE correct_predictions counter\n"
+	metrics += "correct_predictions " + str(metric_handler.get_no_correct_predictions()) + "\n\n"
+	#tag_occurences, tag_count, tag_sum = metric_handler.get_tag_occurences()
+	#metrics += "http_request_duration_seconds_sum{api=\"add_product\" instance=\"host1.domain.com\"} " + str(tag_sum) + "\n"
+	#metrics += "http_request_duration_seconds_count{api=\"add_product\" instance=\"host1.domain.com\"} " + str(tag_count) + "\n"
+	#metrics += "http_request_duration_seconds_bucket{api=\"add_product\" instance=\"host1.domain.com\" le=\"0\"}" + str(metric_handler.get_no_predictions()) + "\n\n"
+
+	return metrics
+
 if __name__ == '__main__':
-    app.run(host="0.0.0.0", port=8080, debug=True)
+	app.run(host="0.0.0.0", port=8080, debug=True)
