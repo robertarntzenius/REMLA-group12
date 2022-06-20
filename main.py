@@ -2,6 +2,7 @@
 and tries to assign a tag to a question"""
 # pylint: disable=R0914
 # pylint: disable=W0612
+# pylint: disable=R0801
 import joblib
 
 from src import evaluation, multilabel, preprocessing

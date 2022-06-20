@@ -3,6 +3,7 @@ Automatic evaluation of the generated StackOverflow dataset.
 """
 # pylint: disable=W0612
 # pylint: disable=R0914
+# pylint: disable=R0801
 import evaluation
 import multilabel
 import preprocessing
