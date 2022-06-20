@@ -1,8 +1,8 @@
 """Module for flask api calls."""
 # pylint: disable=R0903
 import joblib
-from flask import Flask, request, render_template, redirect
 from flasgger import Swagger
+from flask import Flask, redirect, render_template, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired

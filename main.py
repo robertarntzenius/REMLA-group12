@@ -7,6 +7,7 @@ import joblib
 from src import evaluation, multilabel, preprocessing
 from src import transform_text_to_vector as transform
 
+
 def predict():
     """Predict the tag of a question"""
     # Preprocessing
