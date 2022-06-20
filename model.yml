@@ -1,0 +1,74 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: web-depl
+  labels:
+    app: web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: web
+  template:
+    metadata:
+      labels:
+        app: web
+    spec:
+      containers:
+      - name: web
+        image: robertarntzenius/test:latest
+        ports:
+        - containerPort: 8080
+        env:
+        - name: MODEL_HOST
+          valueFrom:
+            configMapKeyRef:
+              name: my-config
+              key: model.host
+            
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: web-svc
+  labels:
+    app: web-svc
+spec:
+  selector:
+    app: web
+  ports:
+   - port: 8080
+     targetPort: 8080
+---
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: my-monitor
+  labels:
+    release: promstack
+spec:
+  selector:
+    matchLabels:
+      app: web-svc
+  endpoints:
+  - targetPort: 8080
+    path: "/metrics"
+    interval: 1s
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: my-ingress
+spec:
+  defaultBackend:
+    service:
+      name: web-svc
+      port:
+        number: 8080
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: my-config
+data:
+  model.host: "http://model-src:8080"
