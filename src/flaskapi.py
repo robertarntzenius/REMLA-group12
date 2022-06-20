@@ -1,3 +1,5 @@
+"""Module for flask api calls."""
+# pylint: disable=R0903
 import joblib
 from flask import Flask, request, render_template, redirect
 from flasgger import Swagger
@@ -12,6 +14,7 @@ app.config['SECRET_KEY'] = 'you-will-never-guess'
 swagger = Swagger(app)
 
 class QuestionForm(FlaskForm):
+    """Form for question."""
     question = StringField('Question', validators=[DataRequired()])
     submit = SubmitField('Predict')
 
@@ -19,6 +22,7 @@ class QuestionForm(FlaskForm):
 @app.route('/')
 @app.route('/index')
 def index():
+    """Homepage."""
     form = QuestionForm()
     if form.validate_on_submit():
         return redirect('/predict')
@@ -27,6 +31,7 @@ def index():
 # Page where the predicted tags are shown
 @app.route('/predict', methods=['POST'])
 def predict():
+    """Predict the tag of a question."""
     tags = joblib.load('output/tags.joblib')
     tfidf_vectorizer = joblib.load('output/tfidf_vectorizer.joblib')
     classifier_tfidf = joblib.load('output/classifier_tfidf.joblib')
