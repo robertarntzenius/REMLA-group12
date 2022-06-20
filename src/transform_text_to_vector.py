@@ -1,5 +1,6 @@
 # pylint: disable=W1401,C0103
 """This module transforms text to vectors"""
+import joblib
 import numpy as np
 from scipy import sparse as sp_sparse
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -18,7 +19,7 @@ def bag_of_words(x_train, x_val, x_test, words_counts):
     DICT_SIZE = 5000
     INDEX_TO_WORDS = sorted(words_counts, key=words_counts.get, reverse=True)[
         :DICT_SIZE
-    ]  ####### YOUR CODE HERE #######
+    ]
     WORDS_TO_INDEX = {word: i for i, word in enumerate(INDEX_TO_WORDS)}
     # ALL_WORDS = WORDS_TO_INDEX.keys()
 
@@ -104,10 +105,12 @@ def tfidf_features(x_train, x_val, x_test):
 
     tfidf_vectorizer = TfidfVectorizer(
         min_df=5, max_df=0.9, ngram_range=(1, 2), token_pattern="(\S+)"
-    )  ####### YOUR CODE HERE #######
+    )
 
     x_train = tfidf_vectorizer.fit_transform(x_train)
     x_val = tfidf_vectorizer.transform(x_val)
     x_test = tfidf_vectorizer.transform(x_test)
+
+    joblib.dump(tfidf_vectorizer, 'output/tfidf_vectorizer.joblib')
 
     return x_train, x_val, x_test, tfidf_vectorizer.vocabulary_

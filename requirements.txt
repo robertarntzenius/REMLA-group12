@@ -10,7 +10,12 @@ tensorflow-data-validation
 nlpaug
 pytest
 pytest-cov
+black==21.12b0
+joblib
 Flask==1.1.4
+Flask-WTF
+WTForms
 markupsafe==2.0.1
 jinja2<3.1.0
 flasgger
+
