@@ -1,6 +1,6 @@
 name: Test data generation
 
-on: push
+on: pull_request
 
 jobs:
   build:
