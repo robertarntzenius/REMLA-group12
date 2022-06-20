@@ -14,7 +14,7 @@ def predict():
     x_train, y_train, x_val, y_val, x_test = preprocessing.init_preprocessing()
     tags_counts, words_counts = preprocessing.words_tags_count(x_train, y_train)
 
-    joblib.dump(sorted(tags_counts.keys()), 'output/tags.joblib')
+    joblib.dump(sorted(tags_counts.keys()), "output/tags.joblib")
 
     # Transform text to vector
     ## Bag of words
@@ -34,7 +34,9 @@ def predict():
 
     # Train model
     ## Init multilabel classifier
-    mlb, y_train, y_val = multilabel.init_multilabel_classifier(y_train, y_val, tags_counts)
+    mlb, y_train, y_val = multilabel.init_multilabel_classifier(
+        y_train, y_val, tags_counts
+    )
     ## Bag of words
     (
         y_val_predicted_labels_mybag,
@@ -57,5 +59,5 @@ def predict():
     # Analysis
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     predict()
