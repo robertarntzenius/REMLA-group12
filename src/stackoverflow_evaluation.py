@@ -1,20 +1,28 @@
-"""This module trains a model based on questions on stackoverflow
-and tries to assign a tag to a question"""
-# pylint: disable=R0914
+"""
+Automatic evaluation of the generated StackOverflow dataset.
+"""
 # pylint: disable=W0612
-import joblib
+# pylint: disable=R0914
+import evaluation
+import multilabel
+import preprocessing
+import transform_text_to_vector as transform
 
-from src import evaluation, multilabel, preprocessing
-from src import transform_text_to_vector as transform
 
+def run_generated():
+    """
+    Train the model.
+    """
 
-def predict():
-    """Predict the tag of a question"""
     # Preprocessing
-    x_train, y_train, x_val, y_val, x_test = preprocessing.init_preprocessing("data")
+    x_train, y_train, x_val, y_val, x_test = preprocessing.init_preprocessing(
+        "generated"
+    )
+    # Print length of training, validation and test set
+    print("Length of training set:", len(x_train))
+    print("Length of validation set:", len(x_val))
+    print("Length of test set:", len(x_test))
     tags_counts, words_counts = preprocessing.words_tags_count(x_train, y_train)
-
-    joblib.dump(sorted(tags_counts.keys()), "output/tags.joblib")
 
     # Transform text to vector
     ## Bag of words
@@ -50,14 +58,16 @@ def predict():
 
     # Evaluate model
     ## Bag of words
-    evaluation.print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag)
+    evaluation.print_evaluation_scores_bag_of_words(
+        y_val, y_val_predicted_labels_mybag, is_stackoverflow=True
+    )
     evaluation.print_roc_auc_score_bag_of_words(y_val, y_val_predicted_scores_mybag)
     ## TF-IDF
-    evaluation.print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf)
+    evaluation.print_evaluation_scores_tfidf(
+        y_val, y_val_predicted_labels_tfidf, is_stackoverflow=True
+    )
     evaluation.print_roc_auc_score_tfidf(y_val, y_val_predicted_scores_tfidf)
-
-    # Analysis
 
 
 if __name__ == "__main__":
-    predict()
+    run_generated()
