@@ -67,7 +67,7 @@ def predict():
 
 @app.route('/feedbacksucces', methods=['POST'])
 def feedbacksucces():
-    question = str(request.form.get('question'))
+    #question = str(request.form.get('question'))
     tags_accurate = request.form.get('tags_accurate')
 
     metric_handler.feedback(tags_accurate)
