@@ -61,9 +61,9 @@ def predict():
 def feedbacksucces():
     question = str(request.form.get('question'))
     tags_accurate = request.form.get('tags_accurate')
-    
+
     metric_handler.feedback(tags_accurate)
-    
+
     if not tags_accurate:
         suggested_tags = request.form.get('suggested_tags')
         #TODO Process feedback
@@ -82,14 +82,14 @@ def feedback():
 @app.route('/metrics')
 def metrics():
 	metrics = ""
-	
+
 	metrics += "# HELP number_of_predictions Total number of predictions cast\n"
 	metrics += "# TYPE number_of_predictions counter\n"
 	metrics += "number_of_predictions " + str(metric_handler.get_no_predictions()) + "\n\n"
 	metrics += "# HELP correct_predictions Total number of correct predictions\n"
 	metrics += "# TYPE correct_predictions counter\n"
 	metrics += "correct_predictions " + str(metric_handler.get_no_correct_predictions()) + "\n\n"
-	
+
 	no_tags, no_suggested = metric_handler.get_no_tags()
 
 	metrics += "# HELP tags_predicted Total number of predicted tags\n"
