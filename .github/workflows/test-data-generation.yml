@@ -26,5 +26,5 @@ jobs:
           
           git fetch --prune
           
-          cml send-comment reports/bag-of-words-metrics-stackoverflow.md
-          cml send-comment reports/tf-idf-metrics-stackoverflow.md
+          cml send-comment --commit-sha=${{ github.event.pull_request.head.sha }} --pr reports/bag-of-words-metrics-stackoverflow.md
+          cml send-comment --commit-sha=${{ github.event.pull_request.head.sha }} --pr reports/tf-idf-metrics-stackoverflow.md
