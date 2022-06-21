@@ -68,6 +68,7 @@ def feedbacksucces():
         suggested_tags = request.form.get('suggested_tags')
         #TODO Process feedback
         print(suggested_tags)
+        metric_handler.suggested(suggested_tags)
 
     return render_template('feedbacksuccess.html')
 
@@ -88,10 +89,15 @@ def metrics():
 	metrics += "# HELP correct_predictions Total number of correct predictions\n"
 	metrics += "# TYPE correct_predictions counter\n"
 	metrics += "correct_predictions " + str(metric_handler.get_no_correct_predictions()) + "\n\n"
-	#tag_occurences, tag_count, tag_sum = metric_handler.get_tag_occurences()
-	#metrics += "http_request_duration_seconds_sum{api=\"add_product\" instance=\"host1.domain.com\"} " + str(tag_sum) + "\n"
-	#metrics += "http_request_duration_seconds_count{api=\"add_product\" instance=\"host1.domain.com\"} " + str(tag_count) + "\n"
-	#metrics += "http_request_duration_seconds_bucket{api=\"add_product\" instance=\"host1.domain.com\" le=\"0\"}" + str(metric_handler.get_no_predictions()) + "\n\n"
+	
+	no_tags, no_suggested = metric_handler.get_no_tags()
+
+	metrics += "# HELP tags_predicted Total number of predicted tags\n"
+	metrics += "# TYPE tags_predicted counter\n"
+	metrics += "tags_predicted " + str(no_tags) + "\n\n"
+	metrics += "# HELP tags_suggested Total number of tags suggested\n"
+	metrics += "# TYPE tags_suggested counter\n"
+	metrics += "tags_suggested " + str(no_suggested) + "\n\n"
 
 	return metrics
 
