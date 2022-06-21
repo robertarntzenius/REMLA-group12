@@ -1,15 +1,15 @@
-import json
-
 # pylint: disable=R0903
+"""Flask API"""
+
+
+import json
 import joblib
 from flasgger import Swagger
 from flask import Flask, redirect, render_template, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField
 from wtforms.validators import DataRequired
-
 from preprocessing import text_prepare
-
 from metrics import MetricHandler
 
 app = Flask(__name__)
