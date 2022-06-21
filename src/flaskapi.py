@@ -59,7 +59,7 @@ def predict():
     result = [i for (i, v) in zip(tags, prediction[0]) if v == 1]
     if not result:
         result = []
-        
+
     metric_handler.new_prediction(result)
 
     return render_template("predict.html", question=question, tags=result)
@@ -86,25 +86,25 @@ def feedback():
 
 @app.route('/metrics')
 def metrics():
-	metrics = ""
+    metrics = ""
 
-	metrics += "# HELP number_of_predictions Total number of predictions cast\n"
-	metrics += "# TYPE number_of_predictions counter\n"
-	metrics += "number_of_predictions " + str(metric_handler.get_no_predictions()) + "\n\n"
-	metrics += "# HELP correct_predictions Total number of correct predictions\n"
-	metrics += "# TYPE correct_predictions counter\n"
-	metrics += "correct_predictions " + str(metric_handler.get_no_correct_predictions()) + "\n\n"
+    metrics += "# HELP number_of_predictions Total number of predictions cast\n"
+    metrics += "# TYPE number_of_predictions counter\n"
+    metrics += "number_of_predictions " + str(metric_handler.get_no_predictions()) + "\n\n"
+    metrics += "# HELP correct_predictions Total number of correct predictions\n"
+    metrics += "# TYPE correct_predictions counter\n"
+    metrics += "correct_predictions " + str(metric_handler.get_no_correct_predictions()) + "\n\n"
 
-	no_tags, no_suggested = metric_handler.get_no_tags()
+    no_tags, no_suggested = metric_handler.get_no_tags()
 
-	metrics += "# HELP tags_predicted Total number of predicted tags\n"
-	metrics += "# TYPE tags_predicted counter\n"
-	metrics += "tags_predicted " + str(no_tags) + "\n\n"
-	metrics += "# HELP tags_suggested Total number of tags suggested\n"
-	metrics += "# TYPE tags_suggested counter\n"
-	metrics += "tags_suggested " + str(no_suggested) + "\n\n"
+    metrics += "# HELP tags_predicted Total number of predicted tags\n"
+    metrics += "# TYPE tags_predicted counter\n"
+    metrics += "tags_predicted " + str(no_tags) + "\n\n"
+    metrics += "# HELP tags_suggested Total number of tags suggested\n"
+    metrics += "# TYPE tags_suggested counter\n"
+    metrics += "tags_suggested " + str(no_suggested) + "\n\n"
 
-	return metrics
+    return metrics
 
 if __name__ == '__main__':
-	app.run(host="0.0.0.0", port=8080, debug=True)
+    app.run(host="0.0.0.0", port=8080, debug=True)
