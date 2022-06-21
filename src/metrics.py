@@ -1,6 +1,6 @@
 class MetricHandler:
-	"""Metric Handler."""
-	def __init__(self):
+    """Metric Handler."""
+    def __init__(self):
         self.no_predictions = 0
         self.correct_predictions = 0
         self.no_tags_predicted = 0
