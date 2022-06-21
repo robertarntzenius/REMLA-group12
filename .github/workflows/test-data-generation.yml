@@ -1,0 +1,30 @@
+name: Test data generation
+
+on: pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v3
+        with:
+          python-version: 3.8
+      - uses: iterative/setup-cml@v1
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+      - name: Generate test data
+        run: |
+          python stackoverflow_scrape/scrape.py --amount 5000 --tab Votes --directory generated
+      - name: Test and evaluate data
+        env:
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          python src/stackoverflow_evaluation.py
+          
+          git fetch --prune
+          
+          cml send-comment reports/bag-of-words-metrics-stackoverflow.md
+          cml send-comment reports/tf-idf-metrics-stackoverflow.md
