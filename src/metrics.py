@@ -26,7 +26,7 @@ class MetricHandler:
 
     def get_no_predictions(self):
         """Get number of total predictions."""
-    	return self.no_predictions
+        return self.no_predictions
 
     def get_no_correct_predictions(self):
         """Get number of correct predictions."""
