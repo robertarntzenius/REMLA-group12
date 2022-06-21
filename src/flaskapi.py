@@ -20,16 +20,17 @@ metric_handler = MetricHandler()
 
 class QuestionForm(FlaskForm):
     """Form for question."""
-
     question = StringField("Question", validators=[DataRequired()])
     submit = SubmitField("Predict")
 
 
 class TagsAccurateForm(FlaskForm):
+    """Form for accuracy of tags."""
     tags_accurate = BooleanField()
     submit = SubmitField('Yes')
 
 class TagsNotAccurateForm(FlaskForm):
+    """Form for accuracy of tags."""
     tags_accurate = BooleanField()
     submit = SubmitField('No')
 
@@ -67,6 +68,7 @@ def predict():
 
 @app.route('/feedbacksucces', methods=['POST'])
 def feedbacksucces():
+    """Handle received feedback and allow return to main page"""
     #question = str(request.form.get('question'))
     tags_accurate = request.form.get('tags_accurate')
 
@@ -80,12 +82,14 @@ def feedbacksucces():
 
 @app.route('/feedback', methods=['POST'])
 def feedback():
+    """Receive feedback on prediction."""
     question = str(request.form.get('question'))
     tags = json.loads(request.form.get('tags'))
     return render_template('feedback.html', question=question, tags=tags)
 
 @app.route('/metrics')
 def metrics():
+    """Metric output."""
     output = ""
 
     output += "# HELP number_of_predictions Total number of predictions cast\n"
