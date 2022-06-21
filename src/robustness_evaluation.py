@@ -35,7 +35,6 @@ def main():
     x_val_mod = []
     for title in x_val:
         title_mod = aug.augment(title)
-        print(title_mod)
         x_val_mod.append(title_mod)
 
     (

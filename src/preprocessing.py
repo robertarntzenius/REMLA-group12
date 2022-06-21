@@ -17,13 +17,13 @@ else:
 nltk.download("stopwords")
 
 
-def init_preprocessing():
+def init_preprocessing(directory):
     """
     initialize the preprocessing
     """
-    train = read_data("data/train.tsv")
-    validation = read_data("data/validation.tsv")
-    test = pd.read_csv("data/test.tsv", sep="\t")
+    train = read_data(directory + "/train.tsv")
+    validation = read_data(directory + "/validation.tsv")
+    test = pd.read_csv(directory + "/test.tsv", sep="\t")
 
     x_train, y_train = train["title"].values, train["tags"].values
     x_val, y_val = validation["title"].values, validation["tags"].values
