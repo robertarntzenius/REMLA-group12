@@ -7,7 +7,7 @@
            font-family: sans-serif;
         }
 
-        h1, h2 {
+        h1, h2, h3 {
             text-align: center;
         }
 
@@ -43,8 +43,8 @@
         }
     </style>
 </head>
-<h1>StackOverflow Tags Predictor</h1>
 <body>
+    <h1>StackOverflow Tags Predictor</h1>
     <h2>Predicted tags for "{{ question }}":</h2>
 
     <p style="text-align: center;">
@@ -53,6 +53,44 @@
         {% endfor %}
     </p>
 
-    <button type="button" onclick="window.location.href='../'">Try another question!</button>
+    <div>
+        <h3>Are these tags accurate?</h3>
+        <button type="button" onclick="submitFeedback(true, {{ tags }})">Yes</button>
+        <button type="button" onclick="submitFeedback(false, {{ tags }})">No</button>
+    </div>
+    <script>
+        function submitFeedback(tags_accurate, tags) {
+            var form = document.createElement("form");
+            form.style.display = "none";
+            form.method = "POST";
+            //document.body.appendChild(form);
+            var input = document.createElement("input");
+            input.setAttribute("type", "checkbox");
+            input.setAttribute("name", "tags_accurate");
+            input.checked = tags_accurate;
+            form.appendChild(input);
+
+            var questionInput = document.createElement("input");
+            questionInput.setAttribute("name", "question")
+            questionInput.setAttribute("type", "text");
+            questionInput.setAttribute("value", "{{ question }}");
+            form.appendChild(questionInput);
+
+            var tagsInput = document.createElement("input");
+            tagsInput.setAttribute("name", "tags")
+            tagsInput.setAttribute("type", "text");
+            tagsInput.setAttribute("value", JSON.stringify(tags));
+            form.appendChild(tagsInput);
+
+            if (tags_accurate) {
+                form.action = "/feedbacksucces"
+            } else {
+                form.action = "/feedback"
+            }
+            document.body.appendChild(form);
+
+            form.submit();
+        }
+    </script>
 </body>
 </html>

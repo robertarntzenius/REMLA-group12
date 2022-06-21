@@ -1,17 +1,24 @@
-"""Module for flask api calls."""
 # pylint: disable=R0903
+"""Flask API"""
+
+
+import json
+
 import joblib
 from flasgger import Swagger
 from flask import Flask, redirect, render_template, request
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField
+from wtforms import BooleanField, StringField, SubmitField
 from wtforms.validators import DataRequired
 
+from metrics import MetricHandler
 from preprocessing import text_prepare
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "you-will-never-guess"
 swagger = Swagger(app)
+
+metric_handler = MetricHandler()
 
 
 class QuestionForm(FlaskForm):
@@ -19,6 +26,20 @@ class QuestionForm(FlaskForm):
 
     question = StringField("Question", validators=[DataRequired()])
     submit = SubmitField("Predict")
+
+
+class TagsAccurateForm(FlaskForm):
+    """Form for accuracy of tags."""
+
+    tags_accurate = BooleanField()
+    submit = SubmitField("Yes")
+
+
+class TagsNotAccurateForm(FlaskForm):
+    """Form for accuracy of tags."""
+
+    tags_accurate = BooleanField()
+    submit = SubmitField("No")
 
 
 # Homepage with only a string field for the StackOverflow question you want to predict the tags for
@@ -46,9 +67,64 @@ def predict():
     prediction = classifier_tfidf.predict(processed_question)
     result = [i for (i, v) in zip(tags, prediction[0]) if v == 1]
     if not result:
-        result = ["No tags"]
+        result = []
+
+    metric_handler.new_prediction(result)
 
     return render_template("predict.html", question=question, tags=result)
+
+
+@app.route("/feedbacksucces", methods=["POST"])
+def feedbacksucces():
+    """Handle received feedback and allow return to main page"""
+    # question = str(request.form.get('question'))
+    tags_accurate = request.form.get("tags_accurate")
+
+    metric_handler.feedback(tags_accurate)
+
+    if not tags_accurate:
+        suggested_tags = request.form.get("suggested_tags")
+        metric_handler.suggested(suggested_tags)
+
+    return render_template("feedbacksuccess.html")
+
+
+@app.route("/feedback", methods=["POST"])
+def feedback():
+    """Receive feedback on prediction."""
+    question = str(request.form.get("question"))
+    tags = json.loads(request.form.get("tags"))
+    return render_template("feedback.html", question=question, tags=tags)
+
+
+@app.route("/metrics")
+def metrics():
+    """Metric output."""
+    output = ""
+
+    output += "# HELP number_of_predictions Total number of predictions cast\n"
+    output += "# TYPE number_of_predictions counter\n"
+    output += (
+        "number_of_predictions " + str(metric_handler.get_no_predictions()) + "\n\n"
+    )
+    output += "# HELP correct_predictions Total number of correct predictions\n"
+    output += "# TYPE correct_predictions counter\n"
+    output += (
+        "correct_predictions "
+        + str(metric_handler.get_no_correct_predictions())
+        + "\n\n"
+    )
+
+    no_tags, no_suggested = metric_handler.get_no_tags()
+
+    output += "# HELP tags_predicted Total number of predicted tags\n"
+    output += "# TYPE tags_predicted counter\n"
+    output += "tags_predicted " + str(no_tags) + "\n\n"
+    output += "# HELP tags_suggested Total number of tags suggested\n"
+    output += "# TYPE tags_suggested counter\n"
+    output += "tags_suggested " + str(no_suggested) + "\n\n"
+
+    return output
 
 
 if __name__ == "__main__":

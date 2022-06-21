@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>StackOverflow Tags Predictor - Prediction</title>
+    <style>
+        body {
+            font-family: sans-serif;
+        }
+
+        h1, h2, h3 {
+            text-align: center;
+        }
+
+        input[type=text], select {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        button, input[type=submit] {
+            width: 100%;
+            background-color: #FF9900;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button, input[type=submit]:hover {
+            background-color: #e68a00;
+        }
+
+        div {
+            border-radius: 5px;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        ul {
+            margin: 0;
+            padding: 0;
+        }
+
+        ul li {
+            position: relative;
+            padding: 12px 8px 12px 12px;
+            list-style-type: none;
+            background: #dddddd;
+            transition: 0.2s;
+
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        .remove {
+            position: absolute;
+            right: 0;
+            top: 0;
+            padding: 12px 16px 12px 16px;
+        }
+
+        .remove:hover {
+            background-color: #f44336;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<script>
+    function newTag() {
+        var li = document.createElement("li");
+        var tag = document.getElementById("newTagInput").value;
+
+        if (tag === '') {
+            alert("You must write something!");
+            return;
+        }
+
+        console.log(tag);
+        var tagSpan = document.createElement("span");
+        tagSpan.className = "tag";
+        tagSpan.appendChild(document.createTextNode(tag));
+
+        li.appendChild(tagSpan);
+
+        var removeButton = document.createElement("span");
+        removeButton.className = "remove";
+        removeButton.appendChild(document.createTextNode("\u00D7"))
+        removeButton.onclick = function () {
+            li.remove()
+        };
+        li.appendChild(removeButton)
+
+        document.getElementById("tagList").appendChild(li);
+        document.getElementById("newTagInput").value = "";
+    }
+
+    function submitTags() {
+        var tags = [];
+        for (i of document.getElementsByClassName("tag")) {
+            tags.push(i.innerText)
+            console.log(tags)
+        }
+        console.log(JSON.stringify(tags));
+
+        var form = document.createElement("form");
+        form.style.display = "none";
+        form.method = "POST";
+        //document.body.appendChild(form);
+        var input = document.createElement("input");
+        input.setAttribute("type", "checkbox");
+        input.setAttribute("name", "tags_accurate");
+        input.checked = false;
+        form.appendChild(input);
+
+        var questionInput = document.createElement("input");
+        questionInput.setAttribute("name", "question")
+        questionInput.setAttribute("type", "text");
+        questionInput.setAttribute("value", "{{ question }}");
+        form.appendChild(questionInput);
+
+        var tagsInput = document.createElement("input");
+        tagsInput.setAttribute("name", "suggested_tags")
+        tagsInput.setAttribute("type", "text");
+        tagsInput.setAttribute("value", JSON.stringify(tags));
+        form.appendChild(tagsInput);
+
+        form.action = "/feedbacksucces"
+
+        document.body.appendChild(form);
+
+        form.submit();
+    }
+</script>
+
+<h1>StackOverflow Tags Predictor</h1>
+<h2>What tags did you expect for "{{ question }}"?</h2>
+
+<div id="myDIV" class="header">
+    <input type="text" id="newTagInput" placeholder="Tag">
+    <button onclick="newTag()" class="addBtn">Add</button>
+</div>
+<br>
+<div>
+    <ul id="tagList">
+        {% for tag in tags %}
+        <li><span class="tag">{{ tag }}</span><span class="remove" onclick="parentElement.remove()">&#215</span></li>
+        {% endfor %}
+    </ul>
+</div>
+
+<button type="button" onclick="submitTags()">Submit</button>
+</body>
+</html>
