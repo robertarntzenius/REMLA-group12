@@ -25,13 +25,13 @@ class MetricHandler:
         self.no_tags_suggested += int((len(tags) - 1) / 4)
 
     def get_no_predictions(self):
-    	"""Get number of total predictions."""
+        """Get number of total predictions."""
     	return self.no_predictions
 
     def get_no_correct_predictions(self):
-    	"""Get number of correct predictions."""
+        """Get number of correct predictions."""
         return self.correct_predictions
 
     def get_no_tags(self):
-    	"""Get tags data."""
+        """Get tags data."""
         return self.no_tags_predicted, self.no_tags_suggested - self.no_tags_predicted
