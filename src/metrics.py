@@ -1,3 +1,5 @@
+"""Metric Handler."""
+
 class MetricHandler:
     """Metric Handler."""
     def __init__(self):
