@@ -3,14 +3,16 @@
 
 
 import json
+
 import joblib
 from flasgger import Swagger
 from flask import Flask, redirect, render_template, request
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, BooleanField
+from wtforms import BooleanField, StringField, SubmitField
 from wtforms.validators import DataRequired
-from preprocessing import text_prepare
+
 from metrics import MetricHandler
+from preprocessing import text_prepare
 
 app = Flask(__name__)
 app.config["SECRET_KEY"] = "you-will-never-guess"
