@@ -1,8 +1,9 @@
 import json
 
+# pylint: disable=R0903
 import joblib
-from flask import Flask, request, render_template, redirect
 from flasgger import Swagger
+from flask import Flask, redirect, render_template, request
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, BooleanField
 from wtforms.validators import DataRequired
@@ -12,14 +13,17 @@ from preprocessing import text_prepare
 from metrics import MetricHandler
 
 app = Flask(__name__)
-app.config['SECRET_KEY'] = 'you-will-never-guess'
+app.config["SECRET_KEY"] = "you-will-never-guess"
 swagger = Swagger(app)
 
 metric_handler = MetricHandler()
 
 class QuestionForm(FlaskForm):
-    question = StringField('Question', validators=[DataRequired()])
-    submit = SubmitField('Predict')
+    """Form for question."""
+
+    question = StringField("Question", validators=[DataRequired()])
+    submit = SubmitField("Predict")
+
 
 class TagsAccurateForm(FlaskForm):
     tags_accurate = BooleanField()
@@ -30,22 +34,25 @@ class TagsNotAccurateForm(FlaskForm):
     submit = SubmitField('No')
 
 # Homepage with only a string field for the StackOverflow question you want to predict the tags for
-@app.route('/')
-@app.route('/index')
+@app.route("/")
+@app.route("/index")
 def index():
+    """Homepage."""
     form = QuestionForm()
     if form.validate_on_submit():
-        return redirect('/predict')
-    return render_template('index.html', form=form)
+        return redirect("/predict")
+    return render_template("index.html", form=form)
+
 
 # Page where the predicted tags are shown
-@app.route('/predict', methods=['POST'])
+@app.route("/predict", methods=["POST"])
 def predict():
-    tags = joblib.load('output/tags.joblib')
-    tfidf_vectorizer = joblib.load('output/tfidf_vectorizer.joblib')
-    classifier_tfidf = joblib.load('output/classifier_tfidf.joblib')
+    """Predict the tag of a question."""
+    tags = joblib.load("output/tags.joblib")
+    tfidf_vectorizer = joblib.load("output/tfidf_vectorizer.joblib")
+    classifier_tfidf = joblib.load("output/classifier_tfidf.joblib")
 
-    question = str(request.form.get('question'))
+    question = str(request.form.get("question"))
     processed_question = tfidf_vectorizer.transform([text_prepare(question)])
 
     prediction = classifier_tfidf.predict(processed_question)
@@ -55,7 +62,8 @@ def predict():
         
     metric_handler.new_prediction(result)
 
-    return render_template('predict.html', question=question, tags=result)
+    return render_template("predict.html", question=question, tags=result)
+
 
 @app.route('/feedbacksucces', methods=['POST'])
 def feedbacksucces():
@@ -66,8 +74,6 @@ def feedbacksucces():
 
     if not tags_accurate:
         suggested_tags = request.form.get('suggested_tags')
-        #TODO Process feedback
-        print(suggested_tags)
         metric_handler.suggested(suggested_tags)
 
     return render_template('feedbacksuccess.html')
@@ -76,7 +82,6 @@ def feedbacksucces():
 def feedback():
     question = str(request.form.get('question'))
     tags = json.loads(request.form.get('tags'))
-    print(tags)
     return render_template('feedback.html', question=question, tags=tags)
 
 @app.route('/metrics')

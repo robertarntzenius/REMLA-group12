@@ -3,13 +3,14 @@
 # fmt: off
 import json
 
+from mdutils.mdutils import MdUtils
 from sklearn.metrics import (accuracy_score, average_precision_score, f1_score,
                              roc_auc_score)
 
 # fmt: on
 
 
-def print_evaluation_scores(y_val, predicted, is_bag_of_words):
+def print_evaluation_scores(y_val, predicted, is_bag_of_words, is_stackoverflow=False):
     """
     y_val: the actual tag
     predicted: the predicted tag
@@ -23,21 +24,58 @@ def print_evaluation_scores(y_val, predicted, is_bag_of_words):
     print("Accuracy score: ", accuracy)
     print("F1 score: ", f1score)
     print("Average precision score: ", precision)
-    if is_bag_of_words:
+    if is_bag_of_words and not is_stackoverflow:
         with open("reports/bag-of-words-metrics.json", "w") as file:
             json.dump(
                 {"accuracy": accuracy, "F1 score": f1score, "precision": precision},
                 file,
             )
-    else:
+    if not is_bag_of_words and not is_stackoverflow:
         with open("reports/tfidf-metrics.json", "w") as file:
             json.dump(
                 {"accuracy": accuracy, "F1 score": f1score, "precision": precision},
                 file,
             )
+    if is_bag_of_words and is_stackoverflow:
+        md_file = MdUtils(
+            file_name="reports/bag-of-words-metrics-stackoverflow",
+            title="Stackoverflow bag of words metrics",
+        )
+        table = [
+            "Metric",
+            "Value",
+            "Accuracy",
+            str(accuracy),
+            "F1 score",
+            str(f1score),
+            "Precision",
+            str(precision),
+        ]
+        md_file.new_table(2, 4, table)
+        md_file.create_md_file()
+
+    if not is_bag_of_words and is_stackoverflow:
+        md_file = MdUtils(
+            file_name="reports/tf-idf-metrics-stackoverflow",
+            title="Stackoverflow tfidf metrics",
+        )
+        table = [
+            "Metric",
+            "Value",
+            "Accuracy",
+            str(accuracy),
+            "F1 score",
+            str(f1score),
+            "Precision",
+            str(precision),
+        ]
+        md_file.new_table(2, 4, table)
+        md_file.create_md_file()
 
 
-def print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag):
+def print_evaluation_scores_bag_of_words(
+    y_val, y_val_predicted_labels_mybag, is_stackoverflow=False
+):
     """
     y_val: the actual tag
     y_val_predicted_labels_mybag: the predicted bag of tags
@@ -45,10 +83,12 @@ def print_evaluation_scores_bag_of_words(y_val, y_val_predicted_labels_mybag):
     return nothing, just call a print method
     """
     print("Bag-of-words")
-    print_evaluation_scores(y_val, y_val_predicted_labels_mybag, True)
+    print_evaluation_scores(y_val, y_val_predicted_labels_mybag, True, is_stackoverflow)
 
 
-def print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf):
+def print_evaluation_scores_tfidf(
+    y_val, y_val_predicted_labels_tfidf, is_stackoverflow=False
+):
     """
     y_val: the actual tag
     y_val_predicted_labels_tfidf: the predicted tags of tfidf
@@ -56,7 +96,9 @@ def print_evaluation_scores_tfidf(y_val, y_val_predicted_labels_tfidf):
     return nothing, just call a print method
     """
     print("Tfidf")
-    print_evaluation_scores(y_val, y_val_predicted_labels_tfidf, False)
+    print_evaluation_scores(
+        y_val, y_val_predicted_labels_tfidf, False, is_stackoverflow
+    )
 
 
 def print_roc_auc_score_bag_of_words(y_val, y_val_predicted_scores_mybag):
